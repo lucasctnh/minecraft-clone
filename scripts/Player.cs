@@ -10,6 +10,8 @@ public partial class Player : CharacterBody3D
 	[Export] public float JumpVelocity = 10f;
 	[Export] public float Sensitivity = 0.002f;
 	[Export] public Vector2 LookRange = new Vector2(-90, 90);
+	[Export] public float BlockDestroyDelay = 0.1f;
+	[Export] public float BlockPlacementDelay = 0.1f;
 
 	[Export] private Camera3D camera3D;
 	[Export] private RayCast3D raycast;
@@ -17,6 +19,8 @@ public partial class Player : CharacterBody3D
 	private int selectedIndex = 0;
 	private GodotObject lastCollider = null;
 	private Vector3 lastCellPos = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
+	private float blockDestroyTimer = 0f;
+	private float blockPlacementTimer = 0f;
 
 	public override void _Ready()
 	{
@@ -25,6 +29,8 @@ public partial class Player : CharacterBody3D
 		// raycast = GetNode<RayCast3D>("Camera3D/RayCast3D");
 
 		SelectBlock(5, 0);
+		blockPlacementTimer = BlockPlacementDelay;
+		blockDestroyTimer = BlockDestroyDelay;
 	}
 
 	public override void _UnhandledInput(InputEvent @event)
@@ -70,8 +76,14 @@ public partial class Player : CharacterBody3D
 
 		// block handling
 		HandleSelectBlock();
-		HandleBlockPlacement();
-		HandleBlockOutline();
+
+		if (raycast.IsColliding())
+		{
+			DrawBlockOutline();
+			HandleBlockPlacement();
+		}
+		else
+			ClearOutline();
 
 		// apply movement
 		Velocity = velocity;
@@ -101,55 +113,64 @@ public partial class Player : CharacterBody3D
 
 	private void HandleBlockPlacement()
 	{
-		if (Input.IsActionJustPressed("left_click"))
+		if (Input.IsActionPressed("left_click"))
 		{
-			if (raycast.IsColliding())
+			blockDestroyTimer += (float)GetPhysicsProcessDeltaTime();
+
+			if (blockDestroyTimer > BlockDestroyDelay && raycast.GetCollider().HasMethod("DestroyBlock"))
 			{
-				if (raycast.GetCollider().HasMethod("DestroyBlock"))
-				{
-					raycast.GetCollider().Call("DestroyBlock", raycast.GetCollisionPoint() - raycast.GetCollisionNormal());
-				}
-			}
-		}
-
-		if (Input.IsActionJustPressed("right_click"))
-		{
-			if (raycast.IsColliding())
-			{
-				if (raycast.GetCollider().HasMethod("PlaceBlock"))
-				{
-					raycast.GetCollider().Call("PlaceBlock", raycast.GetCollisionPoint() + raycast.GetCollisionNormal(), selectedIndex);
-				}
-			}
-		}
-	}
-	private void HandleBlockOutline()
-	{
-		if (raycast.IsColliding())
-		{
-			Vector3 cellPos = raycast.GetCollisionPoint() - raycast.GetCollisionNormal();
-			lastCollider = raycast.GetCollider();
-
-			if (cellPos != lastCellPos)
-			{
-				if (lastCollider.HasMethod("ClearOutline"))
-					lastCollider.Call("ClearOutline");
-
-				if (lastCollider.HasMethod("DrawOutline"))
-					lastCollider.Call("DrawOutline", cellPos);
-
-				lastCellPos = cellPos;
+				raycast.GetCollider().Call("DestroyBlock", raycast.GetCollisionPoint() - raycast.GetCollisionNormal());
+				blockDestroyTimer = 0;
 			}
 		}
 		else
 		{
-			if (lastCollider != null && lastCollider.HasMethod("ClearOutline"))
-			{
-				lastCollider.Call("ClearOutline");
-				lastCellPos = Vector3.Zero;
-			}
-
-			lastCollider = null;
+			// make sure the click while not holding is instantaneous
+			blockDestroyTimer = BlockDestroyDelay;
 		}
+
+		if (Input.IsActionPressed("right_click"))
+		{
+			blockPlacementTimer += (float)GetPhysicsProcessDeltaTime();
+
+			if (blockPlacementTimer > BlockPlacementDelay && raycast.GetCollider().HasMethod("PlaceBlock"))
+			{
+				raycast.GetCollider().Call("PlaceBlock", raycast.GetCollisionPoint() + raycast.GetCollisionNormal(), selectedIndex);
+				blockPlacementTimer = 0;
+			}
+		}
+		else
+		{
+			// make sure the click while not holding is instantaneous
+			blockPlacementTimer = BlockPlacementDelay;
+		}
+	}
+
+	private void DrawBlockOutline()
+	{
+		Vector3 cellPos = raycast.GetCollisionPoint() - raycast.GetCollisionNormal();
+		lastCollider = raycast.GetCollider();
+
+		if (cellPos != lastCellPos)
+		{
+			if (lastCollider.HasMethod("ClearOutline"))
+				lastCollider.Call("ClearOutline");
+
+			if (lastCollider.HasMethod("DrawOutline"))
+				lastCollider.Call("DrawOutline", cellPos);
+
+			lastCellPos = cellPos;
+		}
+	}
+
+	private void ClearOutline()
+	{
+		if (lastCollider != null && lastCollider.HasMethod("ClearOutline"))
+		{
+			lastCollider.Call("ClearOutline");
+			lastCellPos = Vector3.Zero;
+		}
+
+		lastCollider = null;
 	}
 }
