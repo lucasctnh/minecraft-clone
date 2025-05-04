@@ -3,11 +3,13 @@ using System;
 
 public partial class Player : CharacterBody3D
 {
-	[Signal]
-	public delegate void BlockSelectedEventHandler(int hotbarIndex);
+	[Signal] public delegate void BlockSelectedEventHandler(int hotbarIndex);
+	[Signal] public delegate void BlockBreakingEventHandler(int progress);
 
-	[Signal]
-	public delegate void BlockBreakingEventHandler(int progress);
+	[Signal] public delegate void OnMoveEventHandler(Vector3 velocity);
+	[Signal] public delegate void OnHitEventHandler(bool isHitting);
+	[Signal] public delegate void OnJumpEventHandler();
+	[Signal] public delegate void OnLandEventHandler();
 
 	[Export] public float Speed = 8f;
 	[Export] public float JumpVelocity = 10f;
@@ -26,6 +28,7 @@ public partial class Player : CharacterBody3D
 	private float blockDestroyTimer = 0f;
 	private float blockPlacementTimer = 0f;
 	private int blockDestroyProgress = 0;
+	private bool hasJustJumped = false;
 
 	public override void _Ready()
 	{
@@ -74,6 +77,15 @@ public partial class Player : CharacterBody3D
 		if (Input.IsActionJustPressed("jump") && IsOnFloor())
 		{
 			velocity.Y = JumpVelocity;
+
+			hasJustJumped = true;
+			EmitSignal(SignalName.OnJump);
+		}
+
+		if (IsOnFloor() && velocity.Y > 0 && hasJustJumped)
+		{
+			hasJustJumped = false;
+			EmitSignal(SignalName.OnLand);
 		}
 
 		// calculate movement
@@ -104,6 +116,8 @@ public partial class Player : CharacterBody3D
 		// apply movement
 		Velocity = velocity;
 		MoveAndSlide();
+
+		EmitSignal(SignalName.OnMove, velocity);
 	}
 
 	private void HandleSelectBlock()
@@ -131,6 +145,8 @@ public partial class Player : CharacterBody3D
 	{
 		if (Input.IsActionPressed("left_click"))
 		{
+			EmitSignal(SignalName.OnHit, true);
+
 			Vector3 cellPos = raycast.GetCollisionPoint() - raycast.GetCollisionNormal();
 			GodotObject collider = raycast.GetCollider();
 
@@ -169,6 +185,8 @@ public partial class Player : CharacterBody3D
 
 		if (Input.IsActionPressed("right_click"))
 		{
+			EmitSignal(SignalName.OnHit, true);
+
 			blockPlacementTimer += (float)GetPhysicsProcessDeltaTime();
 
 			if (blockPlacementTimer > BlockPlacementDelay && raycast.GetCollider().HasMethod("PlaceBlock"))
@@ -181,6 +199,11 @@ public partial class Player : CharacterBody3D
 		{
 			// make sure the click while not holding is instantaneous
 			blockPlacementTimer = BlockPlacementDelay;
+		}
+
+		if (Input.IsActionPressed("left_click") == false && Input.IsActionPressed("right_click") == false)
+		{
+			EmitSignal(SignalName.OnHit, false);
 		}
 	}
 
