@@ -9,6 +9,7 @@ public partial class Player : CharacterBody3D
 	[Export] public float Speed = 8f;
 	[Export] public float JumpVelocity = 10f;
 	[Export] public float Sensitivity = 0.002f;
+	[Export] public Vector2 LookRange = new Vector2(-90, 90);
 
 	[Export] private Camera3D camera3D;
 	[Export] private RayCast3D raycast;
@@ -32,7 +33,7 @@ public partial class Player : CharacterBody3D
 		{
 			RotateY(-mouseMotion.Relative.X * Sensitivity);
 			camera3D.RotateX(-mouseMotion.Relative.Y * Sensitivity);
-			camera3D.RotationDegrees = new Vector3(Mathf.Clamp(camera3D.RotationDegrees.X, -70, 80),
+			camera3D.RotationDegrees = new Vector3(Mathf.Clamp(camera3D.RotationDegrees.X, LookRange.X, LookRange.Y),
 				camera3D.RotationDegrees.Y, camera3D.RotationDegrees.Z);
 		}
 	}
@@ -53,7 +54,7 @@ public partial class Player : CharacterBody3D
 			velocity.Y = JumpVelocity;
 		}
 
-		// movement
+		// calculate movement
 		Vector2 inputDir = Input.GetVector("left", "right", "up", "down");
 		Vector3 direction = (Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
 		if (direction != Vector3.Zero)
@@ -67,10 +68,12 @@ public partial class Player : CharacterBody3D
 			velocity.Z = 0;
 		}
 
+		// block handling
 		HandleSelectBlock();
 		HandleBlockPlacement();
 		HandleBlockOutline();
 
+		// apply movement
 		Velocity = velocity;
 		MoveAndSlide();
 	}

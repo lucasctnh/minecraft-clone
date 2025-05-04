@@ -13,8 +13,8 @@ radius = 1.0
 height = 4.0
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_3vyb7"]
-radius = 1.0
-height = 4.0
+radius = 0.8
+height = 3.5
 
 [node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("camera3D", "raycast")]
 script = ExtResource("1_3vyb7")

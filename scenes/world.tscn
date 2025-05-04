@@ -39,6 +39,7 @@ shadow_enabled = true
 
 [node name="Player" parent="." instance=ExtResource("2_rwgxs")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8, 10.051)
+JumpVelocity = 18.0
 
 [node name="GridMap" type="GridMap" parent="."]
 mesh_library = ExtResource("3_4wyf3")
