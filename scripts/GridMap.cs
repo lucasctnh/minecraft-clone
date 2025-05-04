@@ -25,10 +25,37 @@ public partial class GridMap : Godot.GridMap
 		SetCellItem(mapCoordinate, -1);
 	}
 
-	public void PlaceBlock(Vector3 worldCoordinate, int blockIndex)
+	public bool PlaceBlock(Vector3 worldCoordinate, int blockIndex)
 	{
 		var mapCoordinate = LocalToMap(worldCoordinate);
+		Vector3 blockPosition = MapToLocal(mapCoordinate);
+
+		// collision check to avoid placing blocks inside player
+		var space = GetWorld3D().DirectSpaceState;
+
+		var parameters = new PhysicsShapeQueryParameters3D();
+		var shape = new BoxShape3D();
+		shape.Size = new Vector3(1.9f, 1.9f, 1.9f);
+		parameters.Shape = shape;
+		parameters.Transform = new Transform3D(Basis.Identity, blockPosition);
+
+		// check collision with all layers containing player
+		parameters.CollideWithAreas = false;
+		parameters.CollideWithBodies = true;
+		parameters.CollisionMask = 0b10;  // layer 2
+
+		var result = space.IntersectShape(parameters);
+
+		// check for any player collisions
+		foreach (var collision in result)
+		{
+			var collider = collision["collider"].As<Node>();
+			if (collider is CharacterBody3D)
+				return false;
+		}
+
 		SetCellItem(mapCoordinate, blockIndex);
+		return true;
 	}
 
 	public void DrawOutline(Vector3 worldCoordinate)

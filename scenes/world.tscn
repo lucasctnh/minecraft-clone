@@ -40,6 +40,7 @@ shadow_enabled = true
 
 [node name="Player" parent="." node_paths=PackedStringArray("gridMap") instance=ExtResource("2_rwgxs")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.63315, 10.051)
+RunSpeed = 16.0
 JumpVelocity = 18.0
 BlockDestroyDelay = 1.0
 gridMap = NodePath("../GridMap")

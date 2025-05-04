@@ -1,4 +1,4 @@
-[gd_scene load_steps=33 format=4 uid="uid://cpra11gh23gab"]
+[gd_scene load_steps=34 format=4 uid="uid://cpra11gh23gab"]
 
 [ext_resource type="Script" uid="uid://dx8fm67hro6l7" path="res://scripts/Player.cs" id="1_3vyb7"]
 [ext_resource type="Texture2D" uid="uid://ddo8ucu41ukct" path="res://resources/icons/wood_planks.png" id="2_tuyoq"]
@@ -12,7 +12,10 @@
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_u8vuu"]
 radius = 0.7
-height = 3.0
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ur7pv"]
+radius = 0.7
+height = 1.4
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_04jxs"]
 resource_name = "Atlas"
@@ -3994,8 +3997,12 @@ tpsCamera = NodePath("TPS_Camera")
 tpsRaycast = NodePath("TPS_Camera/RayCast3D")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.332451)
+transform = Transform3D(1, 0, 0, 0, 0.802974, 0.596015, 0, -0.596015, 0.802974, 0, 0.508533, -0.396352)
 shape = SubResource("CapsuleShape3D_u8vuu")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.823683, 0.0311894)
+shape = SubResource("CapsuleShape3D_ur7pv")
 
 [node name="FPS_Camera" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.999976, 0.00694635, 0, -0.00694635, 0.999976, 0, 1.17273, -1.20811)

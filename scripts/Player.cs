@@ -11,7 +11,8 @@ public partial class Player : CharacterBody3D
 	[Signal] public delegate void OnJumpEventHandler();
 	[Signal] public delegate void OnLandEventHandler();
 
-	[Export] public float Speed = 8f;
+	[Export] public float WalkSpeed = 8f;
+	[Export] public float RunSpeed = 13f;
 	[Export] public float JumpVelocity = 10f;
 	[Export] public float Sensitivity = 0.002f;
 	[Export] public Vector2 LookRange = new Vector2(-90, 90);
@@ -26,6 +27,7 @@ public partial class Player : CharacterBody3D
 
 	private Camera3D Camera => isFps ? fpsCamera : tpsCamera;
 	private RayCast3D Raycast => isFps ? fpsRaycast : tpsRaycast;
+	private float Speed => isRunning ? RunSpeed : WalkSpeed;
 
 	private int selectedIndex = 0;
 	private GodotObject lastOutlineCollider = null;
@@ -35,6 +37,7 @@ public partial class Player : CharacterBody3D
 	private int blockDestroyProgress = 0;
 	private bool hasJustJumped = false;
 	private bool isFps = true;
+	private bool isRunning = false;
 
 	public override void _Ready()
 	{
@@ -138,6 +141,9 @@ public partial class Player : CharacterBody3D
 			velocity.Z = 0;
 		}
 
+		// sprint
+		isRunning = Input.IsActionPressed("sprint") && direction != Vector3.Zero;
+
 		// block handling
 		HandleSelectBlock();
 
@@ -227,8 +233,10 @@ public partial class Player : CharacterBody3D
 
 			if (blockPlacementTimer > BlockPlacementDelay && Raycast.GetCollider().HasMethod("PlaceBlock"))
 			{
-				Raycast.GetCollider().Call("PlaceBlock", Raycast.GetCollisionPoint() + Raycast.GetCollisionNormal(), selectedIndex);
-				blockPlacementTimer = 0;
+				bool blockPlaced = (bool)Raycast.GetCollider().Call("PlaceBlock", Raycast.GetCollisionPoint() + Raycast.GetCollisionNormal(), selectedIndex);
+				if (blockPlaced)
+					blockPlacementTimer = 0;
+				// else { ShowPlacementRejectedFeedback(); }
 			}
 		}
 		else
