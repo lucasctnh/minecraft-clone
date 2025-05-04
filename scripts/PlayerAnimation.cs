@@ -27,8 +27,10 @@ public partial class PlayerAnimation : AnimationPlayer
 	{
 		isMoving = velocity != Vector3.Zero;
 
-		// wait playing hit animation
-		if (IsPlaying() && (GetCurrentAnimation() == "Run_Attack" || GetCurrentAnimation() == "Idle_Attack")) return;
+		// wait playing other animations
+		string currentAnim = IsPlaying() ? GetCurrentAnimation() : "";
+		if (IsPlaying() && currentAnim != "Run" && currentAnim != "Idle")
+			return;
 
 		if (isMoving)
 			Play("Run");
@@ -47,9 +49,14 @@ public partial class PlayerAnimation : AnimationPlayer
 		}
 	}
 
-	private void OnPlayerJump()
+	private async void OnPlayerJump()
 	{
 		Play("Jump");
+
+		await ToSignal(this, SignalName.AnimationFinished);
+
+		GetAnimation("Jump_Idle").LoopMode = Animation.LoopModeEnum.Linear;
+		Play("Jump_Idle");
 	}
 
 	private void OnPlayerLand()

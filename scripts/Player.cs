@@ -18,9 +18,14 @@ public partial class Player : CharacterBody3D
 	[Export] public float BlockDestroyDelay = 0.1f;
 	[Export] public float BlockPlacementDelay = 0.1f;
 
-	[Export] private Camera3D camera3D;
-	[Export] private RayCast3D raycast;
+	[Export] private Camera3D fpsCamera;
+	[Export] private RayCast3D fpsRaycast;
+	[Export] private Camera3D tpsCamera;
+	[Export] private RayCast3D tpsRaycast;
 	[Export] private GridMap gridMap;
+
+	private Camera3D Camera => isFps ? fpsCamera : tpsCamera;
+	private RayCast3D Raycast => isFps ? fpsRaycast : tpsRaycast;
 
 	private int selectedIndex = 0;
 	private GodotObject lastOutlineCollider = null;
@@ -29,6 +34,7 @@ public partial class Player : CharacterBody3D
 	private float blockPlacementTimer = 0f;
 	private int blockDestroyProgress = 0;
 	private bool hasJustJumped = false;
+	private bool isFps = true;
 
 	public override void _Ready()
 	{
@@ -40,6 +46,9 @@ public partial class Player : CharacterBody3D
 		blockPlacementTimer = BlockPlacementDelay;
 		blockDestroyTimer = 0;
 		blockDestroyProgress = 0;
+
+		fpsCamera.Current = true;
+		tpsCamera.Current = false;
 	}
 
 	public override void _EnterTree()
@@ -57,9 +66,10 @@ public partial class Player : CharacterBody3D
 		if (@event is InputEventMouseMotion mouseMotion)
 		{
 			RotateY(-mouseMotion.Relative.X * Sensitivity);
-			camera3D.RotateX(-mouseMotion.Relative.Y * Sensitivity);
-			camera3D.RotationDegrees = new Vector3(Mathf.Clamp(camera3D.RotationDegrees.X, LookRange.X, LookRange.Y),
-				camera3D.RotationDegrees.Y, camera3D.RotationDegrees.Z);
+
+			Camera.RotateX(-mouseMotion.Relative.Y * Sensitivity);
+			Camera.RotationDegrees = new Vector3(Mathf.Clamp(Camera.RotationDegrees.X, LookRange.X, LookRange.Y),
+				Camera.RotationDegrees.Y, Camera.RotationDegrees.Z);
 		}
 	}
 
@@ -81,11 +91,37 @@ public partial class Player : CharacterBody3D
 			hasJustJumped = true;
 			EmitSignal(SignalName.OnJump);
 		}
-
-		if (IsOnFloor() && velocity.Y > 0 && hasJustJumped)
+		if (IsOnFloor() && velocity.Y == 0 && hasJustJumped)
 		{
 			hasJustJumped = false;
 			EmitSignal(SignalName.OnLand);
+		}
+
+		// change camera
+		if (Input.IsActionJustPressed("toggle_camera"))
+		{
+			isFps = !isFps;
+
+			if (isFps)
+			{
+				fpsCamera.Current = true;
+				tpsCamera.Current = false;
+			}
+			else
+			{
+				fpsCamera.Current = false;
+				tpsCamera.Current = true;
+			}
+		}
+
+		// adjust tps camera position
+		if (isFps == false)
+		{
+			float normalizedLook = Mathf.InverseLerp(LookRange.X, 0, tpsCamera.RotationDegrees.X);
+			normalizedLook = Mathf.Lerp(-1.0f, 1.0f, normalizedLook);
+
+			float newPosZ = tpsCamera.Position.Z + normalizedLook;
+			tpsCamera.Position = new Vector3(tpsCamera.Position.X, tpsCamera.Position.Y, Mathf.Clamp(newPosZ, -1f, 5.8f));
 		}
 
 		// calculate movement
@@ -105,7 +141,7 @@ public partial class Player : CharacterBody3D
 		// block handling
 		HandleSelectBlock();
 
-		if (raycast.IsColliding())
+		if (Raycast.IsColliding())
 		{
 			DrawBlockOutline();
 			HandleBlockPlacement();
@@ -147,8 +183,8 @@ public partial class Player : CharacterBody3D
 		{
 			EmitSignal(SignalName.OnHit, true);
 
-			Vector3 cellPos = raycast.GetCollisionPoint() - raycast.GetCollisionNormal();
-			GodotObject collider = raycast.GetCollider();
+			Vector3 cellPos = Raycast.GetCollisionPoint() - Raycast.GetCollisionNormal();
+			GodotObject collider = Raycast.GetCollider();
 
 			blockDestroyTimer += (float)GetPhysicsProcessDeltaTime();
 
@@ -189,9 +225,9 @@ public partial class Player : CharacterBody3D
 
 			blockPlacementTimer += (float)GetPhysicsProcessDeltaTime();
 
-			if (blockPlacementTimer > BlockPlacementDelay && raycast.GetCollider().HasMethod("PlaceBlock"))
+			if (blockPlacementTimer > BlockPlacementDelay && Raycast.GetCollider().HasMethod("PlaceBlock"))
 			{
-				raycast.GetCollider().Call("PlaceBlock", raycast.GetCollisionPoint() + raycast.GetCollisionNormal(), selectedIndex);
+				Raycast.GetCollider().Call("PlaceBlock", Raycast.GetCollisionPoint() + Raycast.GetCollisionNormal(), selectedIndex);
 				blockPlacementTimer = 0;
 			}
 		}
@@ -209,8 +245,8 @@ public partial class Player : CharacterBody3D
 
 	private void DrawBlockOutline()
 	{
-		Vector3 cellPos = raycast.GetCollisionPoint() - raycast.GetCollisionNormal();
-		lastOutlineCollider = raycast.GetCollider();
+		Vector3 cellPos = Raycast.GetCollisionPoint() - Raycast.GetCollisionNormal();
+		lastOutlineCollider = Raycast.GetCollider();
 
 		if (cellPos != lastOutlineCellPos)
 		{
