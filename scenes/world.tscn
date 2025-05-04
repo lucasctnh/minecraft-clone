@@ -1,9 +1,10 @@
-[gd_scene load_steps=10 format=3 uid="uid://b6v2186bhwm00"]
+[gd_scene load_steps=11 format=3 uid="uid://b6v2186bhwm00"]
 
 [ext_resource type="PackedScene" uid="uid://cpra11gh23gab" path="res://scenes/player.tscn" id="2_rwgxs"]
 [ext_resource type="MeshLibrary" uid="uid://bjgfoqpyjvq7o" path="res://resources/blocks.tres" id="3_4wyf3"]
 [ext_resource type="Script" uid="uid://bbwxu4ocpufuo" path="res://scripts/GridMap.cs" id="3_k0juu"]
 [ext_resource type="PackedScene" uid="uid://crutes5ca5yqk" path="res://scenes/block_outline.tscn" id="4_k0juu"]
+[ext_resource type="PackedScene" uid="uid://dbjwkor6i2nvg" path="res://scenes/block_breaking.tscn" id="5_71j4m"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_nnsk1"]
 sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
@@ -37,9 +38,11 @@ environment = SubResource("Environment_4wyf3")
 transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 0, 0)
 shadow_enabled = true
 
-[node name="Player" parent="." instance=ExtResource("2_rwgxs")]
+[node name="Player" parent="." node_paths=PackedStringArray("gridMap") instance=ExtResource("2_rwgxs")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8, 10.051)
 JumpVelocity = 18.0
+BlockDestroyDelay = 1.0
+gridMap = NodePath("../GridMap")
 
 [node name="GridMap" type="GridMap" parent="."]
 mesh_library = ExtResource("3_4wyf3")
@@ -48,6 +51,7 @@ data = {
 }
 script = ExtResource("3_k0juu")
 blockOutline = ExtResource("4_k0juu")
+blockBreaking = ExtResource("5_71j4m")
 metadata/_editor_floor_ = Vector3(0, -1, 0)
 
 [node name="Water" type="MeshInstance3D" parent="."]

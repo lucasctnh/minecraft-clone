@@ -1,0 +1,88 @@
+[gd_scene load_steps=10 format=3 uid="uid://dbjwkor6i2nvg"]
+
+[ext_resource type="Texture2D" uid="uid://bwfik5ngxelao" path="res://resources/textures/break-spritesheet.png" id="1_o4mjb"]
+[ext_resource type="Script" uid="uid://by7koj2d1mt83" path="res://scripts/BlockBreaking.cs" id="1_pmglg"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cirlu"]
+atlas = ExtResource("1_o4mjb")
+region = Rect2(160, 308, 152, 152)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mpxed"]
+atlas = ExtResource("1_o4mjb")
+region = Rect2(0, 308, 152, 152)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nnip7"]
+atlas = ExtResource("1_o4mjb")
+region = Rect2(160, 154, 152, 152)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6nsvg"]
+atlas = ExtResource("1_o4mjb")
+region = Rect2(0, 154, 152, 152)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_x152s"]
+atlas = ExtResource("1_o4mjb")
+region = Rect2(160, 0, 152, 152)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xl1gl"]
+atlas = ExtResource("1_o4mjb")
+region = Rect2(0, 0, 152, 152)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_pmglg"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cirlu")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mpxed")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nnip7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6nsvg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_x152s")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xl1gl")
+}],
+"loop": true,
+"name": &"breaking",
+"speed": 5.0
+}]
+
+[node name="block_breaking" type="Node3D" node_paths=PackedStringArray("animatedSprite3Ds")]
+script = ExtResource("1_pmglg")
+animatedSprite3Ds = [NodePath("AnimatedSprite3D"), NodePath("AnimatedSprite3D2"), NodePath("AnimatedSprite3D3"), NodePath("AnimatedSprite3D4"), NodePath("AnimatedSprite3D5"), NodePath("AnimatedSprite3D6")]
+
+[node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.01)
+sprite_frames = SubResource("SpriteFrames_pmglg")
+animation = &"breaking"
+
+[node name="AnimatedSprite3D2" type="AnimatedSprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.01)
+sprite_frames = SubResource("SpriteFrames_pmglg")
+animation = &"breaking"
+
+[node name="AnimatedSprite3D3" type="AnimatedSprite3D" parent="."]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -1.01, 0, -4.41485e-08)
+sprite_frames = SubResource("SpriteFrames_pmglg")
+animation = &"breaking"
+
+[node name="AnimatedSprite3D4" type="AnimatedSprite3D" parent="."]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 1.01, 0, 4.41485e-08)
+sprite_frames = SubResource("SpriteFrames_pmglg")
+animation = &"breaking"
+
+[node name="AnimatedSprite3D5" type="AnimatedSprite3D" parent="."]
+transform = Transform3D(1.91069e-15, -1, 4.37114e-08, -4.37114e-08, -4.37114e-08, -1, 1, 0, -4.37114e-08, 4.41485e-08, -1.01, -4.41485e-08)
+sprite_frames = SubResource("SpriteFrames_pmglg")
+animation = &"breaking"
+
+[node name="AnimatedSprite3D6" type="AnimatedSprite3D" parent="."]
+transform = Transform3D(1.91069e-15, -1, 4.37114e-08, -4.37114e-08, -4.37114e-08, -1, 1, 0, -4.37114e-08, -4.41485e-08, 1.01, 4.41485e-08)
+sprite_frames = SubResource("SpriteFrames_pmglg")
+animation = &"breaking"

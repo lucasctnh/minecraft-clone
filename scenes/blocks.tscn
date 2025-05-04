@@ -296,6 +296,7 @@ transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
 shape = SubResource("BoxShape3D_x152s")
 
 [node name="Leaves" type="MeshInstance3D" parent="."]
+visible = false
 mesh = SubResource("ArrayMesh_vol6k")
 skeleton = NodePath("")
 
@@ -306,6 +307,7 @@ transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
 shape = SubResource("BoxShape3D_x152s")
 
 [node name="Grass" type="MeshInstance3D" parent="."]
+visible = false
 mesh = SubResource("ArrayMesh_l3c5l")
 skeleton = NodePath("")
 
@@ -316,6 +318,7 @@ transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
 shape = SubResource("BoxShape3D_x152s")
 
 [node name="Stone" type="MeshInstance3D" parent="."]
+visible = false
 mesh = SubResource("ArrayMesh_8e7nc")
 skeleton = NodePath("")
 
@@ -326,6 +329,7 @@ transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
 shape = SubResource("BoxShape3D_x152s")
 
 [node name="Wood" type="MeshInstance3D" parent="."]
+visible = false
 mesh = SubResource("ArrayMesh_jjaxq")
 skeleton = NodePath("")
 
@@ -336,6 +340,7 @@ transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
 shape = SubResource("BoxShape3D_x152s")
 
 [node name="WoodPlanks" type="MeshInstance3D" parent="."]
+visible = false
 mesh = SubResource("ArrayMesh_y7lbs")
 skeleton = NodePath("")
 
@@ -346,6 +351,7 @@ transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
 shape = SubResource("BoxShape3D_x152s")
 
 [node name="Bricks_Grey" type="MeshInstance3D" parent="."]
+visible = false
 mesh = SubResource("ArrayMesh_04b7u")
 skeleton = NodePath("")
 
