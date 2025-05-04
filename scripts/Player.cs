@@ -14,6 +14,8 @@ public partial class Player : CharacterBody3D
 	[Export] private RayCast3D raycast;
 
 	private int selectedIndex = 0;
+	private GodotObject lastCollider = null;
+	private Vector3 lastCellPos = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
 
 	public override void _Ready()
 	{
@@ -67,6 +69,7 @@ public partial class Player : CharacterBody3D
 
 		HandleSelectBlock();
 		HandleBlockPlacement();
+		HandleBlockOutline();
 
 		Velocity = velocity;
 		MoveAndSlide();
@@ -115,6 +118,35 @@ public partial class Player : CharacterBody3D
 					raycast.GetCollider().Call("PlaceBlock", raycast.GetCollisionPoint() + raycast.GetCollisionNormal(), selectedIndex);
 				}
 			}
+		}
+	}
+	private void HandleBlockOutline()
+	{
+		if (raycast.IsColliding())
+		{
+			Vector3 cellPos = raycast.GetCollisionPoint() - raycast.GetCollisionNormal();
+			lastCollider = raycast.GetCollider();
+
+			if (cellPos != lastCellPos)
+			{
+				if (lastCollider.HasMethod("ClearOutline"))
+					lastCollider.Call("ClearOutline");
+
+				if (lastCollider.HasMethod("DrawOutline"))
+					lastCollider.Call("DrawOutline", cellPos);
+
+				lastCellPos = cellPos;
+			}
+		}
+		else
+		{
+			if (lastCollider != null && lastCollider.HasMethod("ClearOutline"))
+			{
+				lastCollider.Call("ClearOutline");
+				lastCellPos = Vector3.Zero;
+			}
+
+			lastCollider = null;
 		}
 	}
 }

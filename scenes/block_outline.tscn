@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://crutes5ca5yqk"]
+
+[ext_resource type="Texture2D" uid="uid://8aa7xxl1kb08" path="res://resources/textures/block_outline.png" id="1_kkvh3"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_umpp7"]
+transparency = 2
+alpha_scissor_threshold = 0.5
+alpha_antialiasing_mode = 0
+cull_mode = 2
+albedo_texture = ExtResource("1_kkvh3")
+metallic_specular = 0.0
+uv1_scale = Vector3(3, 2, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_2s3xi"]
+material = SubResource("StandardMaterial3D_umpp7")
+size = Vector3(2.001, 2.001, 2.001)
+
+[node name="block_outline" type="Node3D"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_2s3xi")
