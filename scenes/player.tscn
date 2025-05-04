@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://cpra11gh23gab"]
+[gd_scene load_steps=10 format=3 uid="uid://cpra11gh23gab"]
 
 [ext_resource type="Script" uid="uid://dx8fm67hro6l7" path="res://scripts/Player.cs" id="1_3vyb7"]
 [ext_resource type="Texture2D" uid="uid://ddo8ucu41ukct" path="res://resources/icons/wood_planks.png" id="2_tuyoq"]
@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://btd3uu0h0n5r3" path="res://resources/icons/dirt.png" id="4_smehm"]
 [ext_resource type="Texture2D" uid="uid://q18covukmqa3" path="res://resources/icons/brick_grey.png" id="5_ur7pv"]
 [ext_resource type="Script" uid="uid://bfbyaxsiknw21" path="res://scripts/Hotbar.cs" id="6_y4r1p"]
+[ext_resource type="Texture2D" uid="uid://uoe16nhdvcem" path="res://resources/textures/crosshair.png" id="7_fjrip"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_u8vuu"]
 radius = 1.0
@@ -56,3 +57,18 @@ item_3/text = "4"
 item_3/icon = ExtResource("5_ur7pv")
 script = ExtResource("6_y4r1p")
 player = NodePath("..")
+
+[node name="Crosshair" type="TextureRect" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -10.0
+offset_top = -9.0
+offset_right = 10.0
+offset_bottom = 10.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("7_fjrip")
+expand_mode = 1
