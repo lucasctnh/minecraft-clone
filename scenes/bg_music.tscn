@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://bs43r8g08geg7"]
+
+[ext_resource type="AudioStream" uid="uid://bkvp16t7b5s3w" path="res://resources/audio/OwlTheoryMusic_On_the_Shore_of_Secrets_[LOOP].wav" id="1_f6gl3"]
+
+[node name="bg_music" type="Node3D"]
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("1_f6gl3")
+volume_db = -20.0
+autoplay = true

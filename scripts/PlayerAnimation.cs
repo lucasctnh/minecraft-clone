@@ -11,6 +11,7 @@ public partial class PlayerAnimation : AnimationPlayer
 	{
 		player.OnMove += OnPlayerMove;
 		player.OnHit += OnPlayerHit;
+		player.OnPlace += OnPlayerHit;
 		player.OnJump += OnPlayerJump;
 		player.OnLand += OnPlayerLand;
 	}
@@ -19,6 +20,7 @@ public partial class PlayerAnimation : AnimationPlayer
 	{
 		player.OnMove -= OnPlayerMove;
 		player.OnHit -= OnPlayerHit;
+		player.OnPlace -= OnPlayerHit;
 		player.OnJump -= OnPlayerJump;
 		player.OnLand -= OnPlayerLand;
 	}

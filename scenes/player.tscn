@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=4 uid="uid://cpra11gh23gab"]
+[gd_scene load_steps=41 format=4 uid="uid://cpra11gh23gab"]
 
 [ext_resource type="Script" uid="uid://dx8fm67hro6l7" path="res://scripts/Player.cs" id="1_3vyb7"]
 [ext_resource type="Texture2D" uid="uid://ddo8ucu41ukct" path="res://resources/icons/wood_planks.png" id="2_tuyoq"]
@@ -9,6 +9,13 @@
 [ext_resource type="Texture2D" uid="uid://uoe16nhdvcem" path="res://resources/textures/crosshair.png" id="7_fjrip"]
 [ext_resource type="Texture2D" uid="uid://klivw64jhph5" path="res://models/Character_Male_1_Atlas.png" id="8_smehm"]
 [ext_resource type="Script" uid="uid://dtwbb7t6o2l3r" path="res://scripts/PlayerAnimation.cs" id="9_ur7pv"]
+[ext_resource type="Script" uid="uid://ctlqwyabaw3f" path="res://scripts/PlayerAudio.cs" id="10_f1ej7"]
+[ext_resource type="AudioStream" uid="uid://c2jcwsl2xf68w" path="res://resources/audio/628638__el_boss__menu-select-tick.wav" id="10_y4r1p"]
+[ext_resource type="AudioStream" uid="uid://bqxtxwx28knki" path="res://resources/audio/489946__falcospizaetus__slowstepsonrock03.wav" id="11_oprun"]
+[ext_resource type="AudioStream" uid="uid://dueou6b3qudv7" path="res://resources/audio/321810__mmasonghi__blocking-arm-with-hand.wav" id="13_a8ls1"]
+[ext_resource type="AudioStream" uid="uid://dxr6bqpxksf6n" path="res://resources/audio/404394__eskimoneil__jump-thump.wav" id="14_a8ls1"]
+[ext_resource type="AudioStream" uid="uid://c03c8k8kb4jip" path="res://resources/audio/66777__kevinkace__crate-break-1.wav" id="14_qfm1y"]
+[ext_resource type="AudioStream" uid="uid://dk73akgkwoaj8" path="res://resources/audio/464607__d001447733__jump_end_gravel.wav" id="15_oprun"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_u8vuu"]
 radius = 0.7
@@ -4018,7 +4025,7 @@ transform = Transform3D(1, 0, 0, 0, 0.874865, 0.484367, 0, -0.484367, 0.874865, 
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.00381523, -5.11056)
 target_position = Vector3(0, 0, -8)
 
-[node name="Hotbar" type="ItemList" parent="." node_paths=PackedStringArray("player")]
+[node name="Hotbar" type="ItemList" parent="." node_paths=PackedStringArray("player", "selectAudio")]
 anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
@@ -4042,6 +4049,7 @@ item_3/text = "4"
 item_3/icon = ExtResource("5_ur7pv")
 script = ExtResource("6_y4r1p")
 player = NodePath("..")
+selectAudio = NodePath("../Audio")
 
 [node name="Crosshair" type="TextureRect" parent="."]
 anchors_preset = 8
@@ -4236,3 +4244,13 @@ libraries = {
 }
 script = ExtResource("9_ur7pv")
 player = NodePath("../..")
+
+[node name="Audio" type="AudioStreamPlayer" parent="." node_paths=PackedStringArray("player")]
+script = ExtResource("10_f1ej7")
+player = NodePath("..")
+walkAudio = ExtResource("11_oprun")
+selectAudio = ExtResource("10_y4r1p")
+hitAudio = ExtResource("13_a8ls1")
+placeAudio = ExtResource("14_a8ls1")
+breakAudio = ExtResource("14_qfm1y")
+landAudio = ExtResource("15_oprun")

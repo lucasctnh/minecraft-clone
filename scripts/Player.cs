@@ -4,10 +4,11 @@ using System;
 public partial class Player : CharacterBody3D
 {
 	[Signal] public delegate void BlockSelectedEventHandler(int hotbarIndex);
-	[Signal] public delegate void BlockBreakingEventHandler(int progress);
+	[Signal] public delegate void BlockBreakEventHandler();
 
 	[Signal] public delegate void OnMoveEventHandler(Vector3 velocity);
 	[Signal] public delegate void OnHitEventHandler(bool isHitting);
+	[Signal] public delegate void OnPlaceEventHandler(bool isPlacing);
 	[Signal] public delegate void OnJumpEventHandler();
 	[Signal] public delegate void OnLandEventHandler();
 
@@ -94,6 +95,7 @@ public partial class Player : CharacterBody3D
 			hasJustJumped = true;
 			EmitSignal(SignalName.OnJump);
 		}
+
 		if (IsOnFloor() && velocity.Y == 0 && hasJustJumped)
 		{
 			hasJustJumped = false;
@@ -214,7 +216,10 @@ public partial class Player : CharacterBody3D
 			{
 				gridMap.StopBreaking();
 				collider.Call("DestroyBlock", cellPos);
+
 				blockDestroyTimer = 0;
+
+				EmitSignal(SignalName.BlockBreak);
 			}
 		}
 		else
@@ -227,8 +232,6 @@ public partial class Player : CharacterBody3D
 
 		if (Input.IsActionPressed("right_click"))
 		{
-			EmitSignal(SignalName.OnHit, true);
-
 			blockPlacementTimer += (float)GetPhysicsProcessDeltaTime();
 
 			if (blockPlacementTimer > BlockPlacementDelay && Raycast.GetCollider().HasMethod("PlaceBlock"))
@@ -236,7 +239,9 @@ public partial class Player : CharacterBody3D
 				bool blockPlaced = (bool)Raycast.GetCollider().Call("PlaceBlock", Raycast.GetCollisionPoint() + Raycast.GetCollisionNormal(), selectedIndex);
 				if (blockPlaced)
 					blockPlacementTimer = 0;
-				// else { ShowPlacementRejectedFeedback(); }
+				// else feedback wrong placement
+
+				EmitSignal(SignalName.OnPlace, blockPlaced);
 			}
 		}
 		else

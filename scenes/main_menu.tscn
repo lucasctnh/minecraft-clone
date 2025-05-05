@@ -58,33 +58,27 @@ RotationSpeed = 0.2
 [node name="Camera3D" type="Camera3D" parent="CameraPivot"]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 41.917, 16.875, 0)
 
-[node name="VBoxContainer" type="VBoxContainer" parent="." node_paths=PackedStringArray("newGameButton", "loadButton", "quitButton")]
+[node name="VBoxContainer" type="VBoxContainer" parent="." node_paths=PackedStringArray("newGameButton", "quitButton")]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -170.5
-offset_top = -98.5
+offset_top = -65.0
 offset_right = 170.5
-offset_bottom = 98.5
+offset_bottom = 65.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("3_bqqt6")
 gameScene = ExtResource("4_wu84c")
 newGameButton = NodePath("NewGameButton")
-loadButton = NodePath("LoadButton")
 quitButton = NodePath("QuitButton")
 
 [node name="NewGameButton" type="Button" parent="VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 40
 text = "New Game"
-
-[node name="LoadButton" type="Button" parent="VBoxContainer"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 40
-text = "Load"
 
 [node name="QuitButton" type="Button" parent="VBoxContainer"]
 layout_mode = 2
