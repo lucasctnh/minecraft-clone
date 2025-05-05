@@ -1,5 +1,6 @@
-[gd_scene load_steps=11 format=3 uid="uid://b6v2186bhwm00"]
+[gd_scene load_steps=12 format=3 uid="uid://b6v2186bhwm00"]
 
+[ext_resource type="Script" uid="uid://qmau5f2ja5jt" path="res://scripts/ReturnMenu.cs" id="1_i7141"]
 [ext_resource type="PackedScene" uid="uid://cpra11gh23gab" path="res://scenes/player.tscn" id="2_rwgxs"]
 [ext_resource type="MeshLibrary" uid="uid://bjgfoqpyjvq7o" path="res://resources/blocks.tres" id="3_4wyf3"]
 [ext_resource type="Script" uid="uid://bbwxu4ocpufuo" path="res://scripts/GridMap.cs" id="3_k0juu"]
@@ -30,6 +31,7 @@ subdivide_width = 10
 subdivide_depth = 10
 
 [node name="World" type="Node3D"]
+script = ExtResource("1_i7141")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_4wyf3")
