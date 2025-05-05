@@ -1,5 +1,5 @@
 # Minecraft Clone: Game Dev Project
-This is a very simple Minecraft clone project developed in Godot following [LegionGames tutorial](https://www.youtube.com/watch?v=sAZ8D3rt5yU) as the foundation, but adding more features that came into my mind. The goal of this project was to learn the basics of Godot engine.
+This is a very simple Minecraft clone project developed in Godot 4, following [LegionGames' tutorial](https://www.youtube.com/watch?v=sAZ8D3rt5yU) as a starting point, but with additional features I came up with. The goal of this project was to learn the basics of the engine.
 
 ![Project Thumbnail](https://github.com/lucasctnh/minecraft-clone/blob/main/game-gif-compress.gif "Project Gif")
 
